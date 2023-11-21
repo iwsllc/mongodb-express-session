@@ -1,0 +1,17 @@
+name: "@iwsio/mongodb-express-session: PUSH to main"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'package/**'
+
+jobs:
+  run_tests:
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    uses: ./.github/workflows/mongodb-session-test.yaml
+  publish:
+    needs: run_tests
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    uses: ./.github/workflows/mongodb-session-publish.yaml
+    secrets: inherit

@@ -1,0 +1,30 @@
+name: Publish @iwsio/mongodb-express-session
+
+on:
+  workflow_call:
+
+jobs:
+  publish:
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm ci -w package
+      - run: npm run build --if-present -w package
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch
+          git pull origin main
+          npm version patch -w package --no-git-tag-version && git add .
+          VER=`node ./npm-version-helper.cjs package`
+          git commit -m "@iwsio/mongodb-express-session version bump to $VER"
+          git tag -am "@iwsio/mongodb-express-session $VER publish." "mongodb-session-$VER"
+          git push
+          git push --tags
+      - run: npm publish --access public -w package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

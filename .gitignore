@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+*.yalc
+yalc.lock
+.yalc
+
+# testing
+coverage
+
+# production
+/server/clients/admin/*
+/server/clients/public/*
+dist
+
+# misc
+.*
+*.tsbuildinfo
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+Thumbs.db

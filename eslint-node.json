@@ -1,0 +1,18 @@
+{
+	"extends": [
+		"./eslint-base.json",
+		"plugin:node/recommended"
+	],
+
+	"plugins": [
+		"node"
+	],
+
+	"rules": {
+		"node/no-missing-import": "off",
+		"node/no-unsupported-features/es-syntax": "off",
+		"node/no-extraneous-import": ["error", {
+			"allowModules": ["@iwsllc/blazer-server-lib", "@iwsllc/blazer-shared", "@iwsllc/blazer-ui"]
+		}]
+	}
+}

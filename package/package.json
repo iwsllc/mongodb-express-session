@@ -1,0 +1,43 @@
+{
+  "name": "@iwsio/mongodb-express-session",
+  "version": "0.1.0",
+  "description": "ESM MongoDB session store for Express. Supports TTL and touch.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "types": "dist/index.d.mts",
+  "scripts": {
+    "test": "VITEST_SEGFAULT_RETRY=3 vitest --run --passWithNoTests",
+    "lint": "eslint src",
+    "prebuild": "tsc --build --clean tsconfig.build.json && rimraf ./dist",
+    "build": "tsc --build tsconfig.build.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "author": "Nathan Bridgewater",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@types/express-session": "^1.17.10",
+    "@types/node": "^20.9.2",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.54.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "express-session": "^1.17.3",
+    "mongodb": "^6.3.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  },
+  "peerDependencies": {
+    "express-session": "^1",
+    "mongodb": "^6"
+  }
+}
