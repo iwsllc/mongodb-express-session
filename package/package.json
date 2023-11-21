@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/mongodb-express-session",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ESM MongoDB session store for Express. Supports TTL and touch.",
   "main": "dist/index.js",
   "module": "dist/index.js",
