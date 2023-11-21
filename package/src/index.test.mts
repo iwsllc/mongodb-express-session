@@ -50,7 +50,7 @@ describe('MongoSessionStore', () => {
 			{ timeout: 1000 }
 		)
 		expect(error).not.to.be.ok
-		expect(constSpy).toBeCalledWith('mongodb://localhost:27017/test')
+		expect(constSpy).toBeCalledWith('mongodb://localhost:27017/express-sessions')
 		expect(info).to.equal('Connected to MongoDB')
 		expect(store.collectionName).to.equal('sessions')
 		expect(store.prefix).to.equal('')

@@ -1,4 +1,8 @@
 /**
+ * @module defaults - default object properties helper. This is my own implementation rather than relying on lodash as a dependency.
+ */
+
+/**
  * Shallow defaults. This basically assigns in when target is undefined.
  *
  * i.e.

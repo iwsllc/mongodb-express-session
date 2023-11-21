@@ -2,37 +2,54 @@ import type { SessionData } from 'express-session'
 import { MongoClient } from 'mongodb'
 import { Store } from 'express-session'
 import { defaults } from './defaults.mjs'
-
-export type MongoSessionStoreOptions = {
-	uri: string;
-	collection: string;
-
-	/**
-	 * The TTL (expiration) in milliseconds of the session.
-	 */
-	ttl: number | ((data: SessionData) => number);
-
-	/**
-	 * The prefix of the session ID key in MongoDB.
-	 */
-	prefix: string;
-};
+import { MongoSessionStoreOptions } from './types/MongoSessionStoreOptions.mjs'
+import { SessionDocument } from './types/SessionDocument.mjs'
+import { StoreCallback, StoreCallbackMany, StoreCallbackOne, StoreCallbackTotal } from './types/StoreCallback.mjs'
 
 const noop = (_err?: unknown, _data?: any) => {}
 
-const _DEFAULTS: MongoSessionStoreOptions = { uri: 'mongodb://localhost:27017/test', collection: 'sessions', ttl: 86400000, prefix: '' }
+const _DEFAULTS: MongoSessionStoreOptions = {
+	uri: 'mongodb://localhost:27017/express-sessions',
+	collection: 'sessions',
+	ttl: 86400000,
+	prefix: ''
+}
 
-type SessionDocument = {
-	_id: string;
-	expires: Date;
-	session: SessionData;
-};
+/**
+ * Express session store for MongoDB.
+ *
+ * Create a new instance and provide to the express-session options as `store` property.
+ *
+ * i.e.
+ * ```
+  import session from 'express-session'
+  import { MongoSessionStore } from '@iwsio/mongodb-express-session'
 
-type StoreCallback = (err?: any) => void;
-type StoreCallbackTotal = (err?: any, total?: number) => void
-type StoreCallbackOne = (err?: any, session?: SessionData | null) => void
-type StoreCallbackMany = (err?: any, session?: SessionData[]) => void
+  const mongoStore = new MongoSessionStore({
+    uri: 'mongodb://localhost:27017/express-sessions',
+    collection: 'sessions',
+    ttl: 60 * 60 * 24 * 7 * 1000 // 1 week
+  })
 
+  app.use(session({
+    secret: 'secret cookie key',
+    resave: false,
+    store: mongoStore,
+    saveUninitialized: false,
+    cookie: { secure: true, sameSite: 'strict' },
+  }))
+ * ```
+ *
+ * Default options:
+ * ```
+ * {
+    uri: 'mongodb://localhost:27017/express-sessions',
+    collection: 'sessions',
+    ttl: 86400000,
+    prefix: ''
+  }
+ * ```
+ */
 export class MongoSessionStore extends Store {
 	client: MongoClient
 	collectionName: string
