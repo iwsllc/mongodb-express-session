@@ -75,7 +75,7 @@ docker compose up -d mongo
 
 # install deps, build both workspaces and start the demo.
 npm ci
-npm build -ws
+npm run build
 npm start -w demo
 ```
 

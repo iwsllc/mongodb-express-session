@@ -4,5 +4,8 @@
 		"sourceMap": false,
 		"declarationMap": false
 	},
-	"exclude": ["node_modules", "**/*.test.*", "**/__tests__/*", "**/__mocks__/*"]
+	"exclude": ["node_modules", "**/*.test.*", "**/__tests__/*", "**/__mocks__/*"],
+	"references": [
+		{ "path": "../package/tsconfig.build.json" }
+	]
 }

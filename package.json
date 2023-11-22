@@ -3,7 +3,8 @@
   "version": "0.1.2-alpha.3",
   "description": "",
   "scripts": {
-    "build": "npm run build -w package"
+    "prebuild": "tsc --build --clean && npm run prebuild -ws --if-present",
+    "build": "tsc --build"
   },
   "author": "Nathan Bridgewater",
   "license": "BSD-3-Clause",
