@@ -7,14 +7,9 @@
   "type": "module",
   "keywords": [
     "connect",
-    "connect-mongodb-session",
     "express",
-    "express-session",
     "mongodb",
-    "session",
-    "store",
-    "esm",
-    "typescript"
+    "session"
   ],
   "types": "dist/index.d.mts",
   "scripts": {
