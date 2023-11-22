@@ -18,7 +18,11 @@
   "exports": {
     ".": "./dist/index.mjs"
   },
-  "author": "Nathan Bridgewater",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/IWSLLC/mongodb-express-session.git"
+  },
+ "author": "Nathan Bridgewater",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/express-session": "^1.17.10",
