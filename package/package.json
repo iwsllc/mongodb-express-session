@@ -5,6 +5,17 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",
+  "keywords": [
+    "connect",
+    "connect-mongodb-session",
+    "express",
+    "express-session",
+    "mongodb",
+    "session",
+    "store",
+    "esm",
+    "typescript"
+  ],
   "types": "dist/index.d.mts",
   "scripts": {
     "test": "VITEST_SEGFAULT_RETRY=3 vitest --run --passWithNoTests",
