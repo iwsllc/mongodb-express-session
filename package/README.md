@@ -2,10 +2,23 @@
 
 [![@iwsio/mongodb-express-session: PUSH to main](https://github.com/iwsllc/mongodb-express-session/actions/workflows/mongodb-session-push-main.yaml/badge.svg)](https://github.com/iwsllc/mongodb-express-session/actions/workflows/mongodb-session-push-main.yaml)
 
-This package provides an updated implementation of the [Express Session Store](https://www.npmjs.com/package/express-session#session-store-implementation) with [MongoDb 6 Driver](https://www.mongodb.com/docs/drivers/node/current/) as an ESM module. This store implements `touch` and `TTL`
+This package provides an ESM module with an updated implementation of the [Express Session Store](https://www.npmjs.com/package/express-session#session-store-implementation) with [MongoDb 6 Driver](https://www.mongodb.com/docs/drivers/node/current/). This store implements `touch` and `TTL`
 
 # Usage
-This module exports a class. The constructor includes options. 
+This module exports a class with a constructor that includes these options:
+
+```ts
+type MongoSessionStoreOptions = {
+	uri: string;
+	collection: string;
+	ttl: number | ((data: SessionData) => number);
+	prefix: string;
+	createTTLIndex: boolean;
+};
+```
+
+## Quick example
+Setting up an express server with `express-sessions` and using this MongoSessionStore as its store.
 
 ```ts
 // app.mts
@@ -14,8 +27,10 @@ import express from 'express'
 import session from 'express-session'
 import { store as mongoStore } from './store.mjs'
 
-export const store = new MongoSessionStore()
+// create a store with default options and custom mongo uri
+const store = new MongoSessionStore({ uri: 'mongodb://localhost/express_sessions' })
 
+// optional, listen to store errors
 store.on('error', function(error: any) {
 	console.error(error)
 })
@@ -35,9 +50,9 @@ app.use(session({
 }))
 ```
 
-## Example
+## Another example
 
-With the `saveUninitialized: false` setting, testing this code out as-is without an established app isn't actually going to save any session data to MongoDb. You need to modify the session in order to initialize it. So here's a quick example that does this.
+With the `saveUninitialized: false` setting, testing this code out as-is without an established app will not save any session data to MongoDb. You need to modify the session in order to initialize it. Here's an example showing a simple middleware that modifies session during a request. 
 
 ```ts
 // global.d.ts
