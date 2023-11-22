@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/mongodb-express-session",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "ESM MongoDB session store for Express. Supports TTL and touch.",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -22,7 +22,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/IWSLLC/mongodb-express-session.git"
   },
- "author": "Nathan Bridgewater",
+  "author": "Nathan Bridgewater",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/express-session": "^1.17.10",
