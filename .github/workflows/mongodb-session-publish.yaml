@@ -20,7 +20,7 @@ jobs:
           git config user.email github-actions@github.com
           git fetch
           git pull origin main
-          npm version patch -w package --no-git-tag-version && git add .
+          npm version patch -ws --include-workspace-root --no-git-tag-version && git add .
           VER=`node ./npm-version-helper.cjs package`
           git commit -m "@iwsio/mongodb-express-session version bump to $VER"
           git tag -am "@iwsio/mongodb-express-session $VER publish." "mongodb-session-$VER"
