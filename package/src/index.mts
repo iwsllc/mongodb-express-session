@@ -9,10 +9,11 @@ import { StoreCallback, StoreCallbackMany, StoreCallbackOne, StoreCallbackTotal 
 const noop = (_err?: unknown, _data?: any) => {}
 
 const _DEFAULTS: MongoSessionStoreOptions = {
-	uri: 'mongodb://localhost:27017/express-sessions',
+	uri: 'mongodb://localhost:27017/express_sessions',
 	collection: 'sessions',
 	ttl: 86400000,
-	prefix: ''
+	prefix: '',
+	createTTLIndex: true
 }
 
 /**
@@ -20,15 +21,13 @@ const _DEFAULTS: MongoSessionStoreOptions = {
  *
  * Create a new instance and provide to the express-session options as `store` property.
  *
- * i.e.
+ * For example:
  * ```
   import session from 'express-session'
   import { MongoSessionStore } from '@iwsio/mongodb-express-session'
 
   const mongoStore = new MongoSessionStore({
-    uri: 'mongodb://localhost:27017/express-sessions',
-    collection: 'sessions',
-    ttl: 60 * 60 * 24 * 7 * 1000 // 1 week
+    uri: 'mongodb://localhost:27017/express_sessions'
   })
 
   app.use(session({
@@ -43,10 +42,11 @@ const _DEFAULTS: MongoSessionStoreOptions = {
  * Default options:
  * ```
  * {
-    uri: 'mongodb://localhost:27017/express-sessions',
+    uri: 'mongodb://localhost:27017/express_sessions',
     collection: 'sessions',
-    ttl: 86400000,
-    prefix: ''
+    ttl: 86400000, // 1 week
+    prefix: '',
+    createTTLIndex: true
   }
  * ```
  */
@@ -56,6 +56,7 @@ export class MongoSessionStore extends Store {
 	connected: boolean = false
 	prefix: string
 	ttl: number | ((data: SessionData) => number)
+	createTTLIndex: boolean
 
 	constructor(opt: Partial<MongoSessionStoreOptions> = {}) {
 		super()
@@ -66,15 +67,27 @@ export class MongoSessionStore extends Store {
 		this.collectionName = options.collection
 		this.ttl = options.ttl
 		this.prefix = options.prefix
+		this.createTTLIndex = options.createTTLIndex
 
 		this.client.connect()
 			.then(() => {
 				this.connected = true
 				this.emit('info', 'Connected to MongoDB')
+				this.checkIndexes()
 			})
 			.catch((err: any) => {
 				this.emit('error', err)
 			})
+	}
+
+	private async checkIndexes() {
+		if (this.createTTLIndex) {
+			try {
+				await this.client.db().collection<SessionDocument>(this.collectionName!).createIndex({ expires: 1 }, { expireAfterSeconds: 0 })
+			} catch (err: any) {
+				this.emit('error', err)
+			}
+		}
 	}
 
 	private _getTTL(sess: SessionData) {
@@ -157,7 +170,6 @@ export class MongoSessionStore extends Store {
 	}
 
 	async touch(sid: string, session: SessionData, cb: StoreCallback = noop) {
-		console.log('touch', sid)
 		try {
 			const ttl = this._getTTL(session)
 			const expires = new Date(Date.now() + ttl)
