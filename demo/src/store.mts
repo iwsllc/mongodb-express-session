@@ -5,6 +5,7 @@ const debug = debugM('demo:session-store')
 
 export const store = new MongoSessionStore({
 	uri: 'mongodb://localhost:27017/express_sessions'
+	// createTTLIndex: false // uncomment for MongoDb < 5.1
 })
 
 store.on('info', debug)
