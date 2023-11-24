@@ -2,21 +2,17 @@ import createError from 'http-errors'
 import express from 'express'
 import logger from 'morgan'
 import session from 'express-session'
-import { MongoSessionStore } from '@iwsio/mongodb-express-session'
+import { store } from './store.mjs'
 import { nanoid } from 'nanoid'
 
 export const app = express()
-
-const mongoStore = new MongoSessionStore({
-	uri: 'mongodb://localhost:27017/express_sessions'
-})
 
 app.use(logger('dev'))
 
 app.use(session({
 	secret: 'keyboard cat',
 	resave: false,
-	store: mongoStore,
+	store,
 	saveUninitialized: false,
 	rolling: true,
 	cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, sameSite: 'strict' },

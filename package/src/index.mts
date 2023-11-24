@@ -72,7 +72,7 @@ export class MongoSessionStore extends Store {
 		this.client.connect()
 			.then(() => {
 				this.connected = true
-				this.emit('info', 'Connected to MongoDB')
+				this.emit('info', 'Connected to MongoDB for session store.')
 				this.checkIndexes()
 			})
 			.catch((err: any) => {
@@ -87,6 +87,16 @@ export class MongoSessionStore extends Store {
 			} catch (err: any) {
 				this.emit('error', err)
 			}
+		}
+	}
+
+	/**
+	 * Closes the MongoDB connection.
+	 */
+	public shutdown() {
+		if (this.connected) {
+			this.emit('info', 'Closing MongoDB connection to session store.')
+			this.client.close()
 		}
 	}
 

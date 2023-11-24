@@ -21,14 +21,20 @@ type MongoSessionStoreOptions = {
 Setting up an express server with `express-sessions` and using this MongoSessionStore as its store.
 
 ```ts
-// app.mts
+// store.mts
 import { MongoSessionStore } from '@iwsio/mongodb-express-session'
+
+// create a store with default options and custom mongo uri
+export const store = new MongoSessionStore({ uri: 'mongodb://localhost/express_sessions' })
+
+store.on('info', console.log)
+store.on('error', console.error)
+
+
+// app.mts
 import express from 'express'
 import session from 'express-session'
 import { store as mongoStore } from './store.mjs'
-
-// create a store with default options and custom mongo uri
-const store = new MongoSessionStore({ uri: 'mongodb://localhost/express_sessions' })
 
 // optional, listen to store errors
 store.on('error', function(error: any) {
@@ -48,6 +54,21 @@ app.use(session({
 	cookie: { httpOnly: true, sameSite: 'strict' },
 	name: 'connect.sid'
 }))
+
+
+// ./bin/web.mts
+// Don't forget to close the db connection on shutdown
+import { store as mongoStore } from './store.mjs'
+
+//... server setup code above
+
+function shutdownHandler(_sig: any, _n: any) {
+	if (server != null) server.close()
+	mongoStore.shutdown()
+}
+
+process.on('SIGTERM', shutdownHandler)
+process.on('SIGINT', shutdownHandler)
 ```
 
 ## Another example
@@ -93,6 +114,8 @@ npm ci
 npm run build
 npm start -w demo
 ```
+
+`Ctrl-C` to stop the server.
 
 
 ### Test the cookie creation
