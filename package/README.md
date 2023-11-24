@@ -102,7 +102,7 @@ app.get('/', (req, res) => {
 ```
 
 ## Run the demo
-Build and run the demo from the project root with Node 20 active. This requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or skip this step if you have a local MongoDb server available, in which case, you'll want to update the config settings in `app.mts` before this step).
+If you [clone the source code](https://github.com/IWSLLC/mongodb-express-session), it includes a simple demo application. Build and run the demo from the project root with Node 20 active. This requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or skip this step if you have a local MongoDb server available, in which case, you'll want to update the config settings in `app.mts` before this step).
 
 ```bash
 # boots up the mongo db (this doesn't map data volume so it will lose everything when it shuts down)
