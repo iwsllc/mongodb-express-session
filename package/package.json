@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/mongodb-express-session",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "An ESM express-session store for MongoDB using the latest MongoDb Node driver v6. Supports TTL and touch. Supports MongoDB v3.6+ (without TTL index), 5.1+ (with TTL Index).",
   "main": "dist/index.js",
   "module": "dist/index.js",
