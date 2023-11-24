@@ -87,7 +87,7 @@ function onListening() {
 
 function shutdownHandler(_sig: any, _n: any) {
 	if (server != null) server.close()
-	store.shutdown()
+	store.close()
 }
 
 process.on('SIGTERM', shutdownHandler)

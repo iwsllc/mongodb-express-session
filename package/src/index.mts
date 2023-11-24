@@ -93,7 +93,7 @@ export class MongoSessionStore extends Store {
 	/**
 	 * Closes the MongoDB connection.
 	 */
-	public shutdown() {
+	public close() {
 		if (this.connected) {
 			this.emit('info', 'Closing MongoDB connection to session store.')
 			this.client.close()

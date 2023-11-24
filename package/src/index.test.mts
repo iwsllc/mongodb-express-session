@@ -19,6 +19,10 @@ vi.mock('mongodb', async () => {
 				return Promise.resolve()
 			}
 
+			close() {
+
+			}
+
 			db() {
 				return {
 					collection() {
@@ -44,25 +48,28 @@ describe('MongoSessionStore', () => {
 		createIndexSpy.mockClear()
 	})
 	it('should connect on construction with defaults', async () => {
+		const spyInfo = vi.fn()
+		const spyError = vi.fn()
 		const store = new mongoSessionStore.MongoSessionStore()
-		let error: any = null; let info: any = null
-		store.on('error', (err: any) => { error = err })
-		store.on('info', (message: string) => { info = message })
+		store.on('info', spyInfo)
+		store.on('error', spyError)
 
-		await vi.waitUntil(
-			() => info != null || error != null,
-			{ timeout: 1000 }
-		)
-		expect(error).not.to.be.ok
-		expect(constSpy).toBeCalledWith('mongodb://localhost:27017/express_sessions')
-		expect(createIndexSpy).toBeCalledWith({ expires: 1 }, { expireAfterSeconds: 0 })
-		expect(info).to.equal('Connected to MongoDB')
-		expect(store.collectionName).to.equal('sessions')
-		expect(store.prefix).to.equal('')
-		expect(store.ttl).to.equal(86400000)
+		await vi.waitFor(() => {
+			expect(constSpy).toBeCalledWith('mongodb://localhost:27017/express_sessions')
+			expect(connectSpy).toHaveBeenCalled()
+			expect(createIndexSpy).toBeCalledWith({ expires: 1 }, { expireAfterSeconds: 0 })
+			expect(store.collectionName).to.equal('sessions')
+			expect(store.prefix).to.equal('')
+			expect(store.ttl).to.equal(86400000)
+			expect(spyError).not.toHaveBeenCalled()
+			expect(spyInfo).toHaveBeenCalledWith('Connected to MongoDB for session store.')
+		})
 	})
 
 	it('should connect on construction', async () => {
+		const spyInfo = vi.fn()
+		const spyError = vi.fn()
+
 		const store = new mongoSessionStore.MongoSessionStore({
 			uri: 'mongodb://localhost:27018/test',
 			collection: 'sessions2',
@@ -70,20 +77,23 @@ describe('MongoSessionStore', () => {
 			prefix: '2',
 			createTTLIndex: false
 		})
-		let error: any = null; let info: any = null
-		store.on('error', (err: any) => { error = err })
-		store.on('info', (message: string) => { info = message })
+		store.on('error', spyError)
+		store.on('info', spyInfo)
 
-		await vi.waitUntil(
-			() => info != null || error != null,
-			{ timeout: 1000 }
-		)
-		expect(error).not.to.be.ok
-		expect(constSpy).toBeCalledWith('mongodb://localhost:27018/test')
-		expect(createIndexSpy).not.toBeCalledWith({ expires: 1 }, { expireAfterSeconds: 0 })
-		expect(info).to.equal('Connected to MongoDB')
-		expect(store.collectionName).to.equal('sessions2')
-		expect(store.prefix).to.equal('2')
-		expect(store.ttl).to.equal(1209600000)
+		await vi.waitFor(() => {
+			expect(constSpy).toBeCalledWith('mongodb://localhost:27018/test')
+			expect(createIndexSpy).not.toBeCalledWith({ expires: 1 }, { expireAfterSeconds: 0 })
+			expect(store.collectionName).to.equal('sessions2')
+			expect(store.prefix).to.equal('2')
+			expect(store.ttl).to.equal(1209600000)
+			expect(spyError).not.toHaveBeenCalled()
+			expect(connectSpy).toHaveBeenCalled()
+			expect(spyInfo).toHaveBeenCalledWith('Connected to MongoDB for session store.')
+		})
+		spyInfo.mockClear()
+		store.close()
+		await vi.waitFor(() => {
+			expect(spyInfo).toHaveBeenCalledWith('Closing MongoDB connection to session store.')
+		})
 	})
 })

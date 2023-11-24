@@ -64,7 +64,7 @@ import { store as mongoStore } from './store.mjs'
 
 function shutdownHandler(_sig: any, _n: any) {
 	if (server != null) server.close()
-	mongoStore.shutdown()
+	mongoStore.close()
 }
 
 process.on('SIGTERM', shutdownHandler)
