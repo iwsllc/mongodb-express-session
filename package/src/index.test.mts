@@ -3,6 +3,7 @@ import * as mongoSessionStore from './index.mjs'
 const connectSpy = vi.fn()
 const constSpy = vi.fn()
 const createIndexSpy = vi.fn()
+const updateOneSpy = vi.fn(() => Promise.resolve({ acknowledged: true }))
 
 vi.mock('mongodb', async () => {
 	const mongodb = (await vi.importActual('mongodb')) as any
@@ -30,7 +31,7 @@ vi.mock('mongodb', async () => {
 							findOne: vi.fn(),
 							findMany: () => ({ toArray: vi.fn() }),
 							deleteOne: vi.fn(() => Promise.resolve({ acknowledged: true })),
-							updateOne: vi.fn(() => Promise.resolve({ acknowledged: true })),
+							updateOne: updateOneSpy,
 							countDocuments: vi.fn(),
 							createIndex: createIndexSpy
 						}
@@ -95,5 +96,39 @@ describe('MongoSessionStore', () => {
 		await vi.waitFor(() => {
 			expect(spyInfo).toHaveBeenCalledWith('Closing MongoDB connection to session store.')
 		})
+	})
+
+	it('should upsert on set', async () => {
+		const store = new mongoSessionStore.MongoSessionStore()
+		const errorSpy = vi.fn()
+		store.on('error', errorSpy)
+
+		await vi.waitFor(() => {
+			expect(connectSpy).toHaveBeenCalled()
+		})
+
+		await store.set('1', {
+			cookie: {
+				maxAge: 2000,
+				originalMaxAge: null
+			}
+		} as any)
+
+		expect(errorSpy).not.toHaveBeenCalled()
+		expect(updateOneSpy).toHaveBeenCalledWith(
+			{ _id: '1' },
+			{
+				$set: expect.objectContaining({
+					// expires, ignoring for test
+					session: {
+						cookie: {
+							maxAge: 2000,
+							originalMaxAge: null
+						}
+					}
+				})
+			},
+			{ upsert: true } // mainly we're asserting this and that it's an update
+		)
 	})
 })
