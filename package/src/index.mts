@@ -172,7 +172,8 @@ export class MongoSessionStore extends Store {
 				expires,
 				session
 			}
-			const result = await this.collection().insertOne(doc)
+			const { _id, ...body } = doc
+			const result = await this.collection().updateOne({ _id: doc._id }, { $set: body }, { upsert: true })
 			result.acknowledged ? cb() : cb(new Error(`set not acknowledged for ${sid}`))
 		} catch (err) {
 			cb(err)

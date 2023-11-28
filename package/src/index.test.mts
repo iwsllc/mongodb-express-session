@@ -96,4 +96,8 @@ describe('MongoSessionStore', () => {
 			expect(spyInfo).toHaveBeenCalledWith('Closing MongoDB connection to session store.')
 		})
 	})
+
+	it('should upsert on set', async () => {
+
+	})
 })
