@@ -34,12 +34,12 @@ app.get('/', (_req, res) => {
 })
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	next(createError(404))
 })
 
 // error handler
-app.use(function(err, _req, res, _next) {
+app.use(function (err, _req, res, _next) {
 	res.status(err.status || 500)
 	res.send(err.message)
 })
