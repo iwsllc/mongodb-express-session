@@ -120,7 +120,7 @@ export class MongoSessionStore extends Store {
 
 	async all(cb: StoreCallbackMany = noop) {
 		try {
-			const result = (await this.collection().find().toArray()).map((doc) => doc.session)
+			const result = (await this.collection().find().toArray()).map(doc => doc.session)
 			cb(null, result)
 		} catch (err) {
 			cb(err)
@@ -130,7 +130,8 @@ export class MongoSessionStore extends Store {
 	async destroy(sid: string, cb: StoreCallback = noop) {
 		try {
 			const result = await this.collection().deleteOne({ _id: sid })
-			result.acknowledged ? cb() : cb(new Error('Not acknowledged'))
+			if (result.acknowledged) cb()
+			else cb(new Error('Not acknowledged'))
 		} catch (err) {
 			cb(err)
 		}
@@ -139,7 +140,8 @@ export class MongoSessionStore extends Store {
 	async clear(cb: StoreCallback = noop) {
 		try {
 			const result = await this.collection().deleteMany({})
-			result.acknowledged ? cb() : cb(new Error('Not acknowledged'))
+			if (result.acknowledged) cb()
+			else cb(new Error('Not acknowledged'))
 		} catch (err) {
 			cb(err)
 		}
@@ -174,7 +176,8 @@ export class MongoSessionStore extends Store {
 			}
 			const { _id, ...body } = doc
 			const result = await this.collection().updateOne({ _id: doc._id }, { $set: body }, { upsert: true })
-			result.acknowledged ? cb() : cb(new Error(`set not acknowledged for ${sid}`))
+			if (result.acknowledged) cb()
+			else cb(new Error(`set not acknowledged for ${sid}`))
 		} catch (err) {
 			cb(err)
 		}
@@ -185,7 +188,8 @@ export class MongoSessionStore extends Store {
 			const ttl = this._getTTL(session)
 			const expires = new Date(Date.now() + ttl)
 			const result = await this.collection().updateOne({ _id: sid }, { $set: { expires } })
-			result.acknowledged ? cb() : cb(new Error(`touch not acknowledged for ${sid}`))
+			if (result.acknowledged) cb()
+			else cb(new Error(`touch not acknowledged for ${sid}`))
 		} catch (err) {
 			cb(err)
 		}

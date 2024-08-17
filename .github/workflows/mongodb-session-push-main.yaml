@@ -7,11 +7,32 @@ on:
       - 'package/**'
 
 jobs:
-  run_tests:
+  tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/mongodb-session-test.yaml
+    uses: iwsllc/workflows/.github/workflows/test.yaml@test
+    with:
+      node-version-file: '.nvmrc'
+      install-command: npm ci
+      test-command: npm run test
+  version:
+    needs: tests
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    uses: iwsllc/workflows/.github/workflows/version.yaml@test
+    with:
+      ref: main
+      node-version-file: '.nvmrc'
+      version-command: npm version patch -ws --include-workspace-root
   publish:
-    needs: run_tests
+    needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/mongodb-session-publish.yaml
-    secrets: inherit
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@test
+    with:
+      ref: main
+      scope: '@iwsio'
+      node-version-file: '.nvmrc'
+      install-command: npm ci -w forms
+      build-command: npm run build -w forms
+      publish-command: npm publish -w forms --access public
+    secrets:
+      # This token is used for reading npm packages; use when private packages are used
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
