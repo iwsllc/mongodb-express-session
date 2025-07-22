@@ -1,6 +1,6 @@
 import type { SessionData } from 'express-session'
 
-export type SessionDocument = {
+export interface SessionDocument {
 	_id: string
 	expires: Date
 	session: SessionData

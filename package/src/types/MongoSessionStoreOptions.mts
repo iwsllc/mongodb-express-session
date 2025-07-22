@@ -1,6 +1,6 @@
 import type { SessionData } from 'express-session'
 
-export type MongoSessionStoreOptions = {
+export interface MongoSessionStoreOptions {
 	uri: string
 	collection: string
 
