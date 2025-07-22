@@ -1,9 +1,10 @@
-import createError from 'http-errors'
 import express from 'express'
-import logger from 'morgan'
 import session from 'express-session'
-import { store } from './store.mjs'
+import createError from 'http-errors'
+import logger from 'morgan'
 import { nanoid } from 'nanoid'
+
+import { store } from './store.mjs'
 
 export const app = express()
 

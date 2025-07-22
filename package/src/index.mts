@@ -1,6 +1,7 @@
 import type { SessionData } from 'express-session'
-import { MongoClient } from 'mongodb'
 import { Store } from 'express-session'
+import { MongoClient } from 'mongodb'
+
 import { defaults } from './defaults.mjs'
 import { MongoSessionStoreOptions } from './types/MongoSessionStoreOptions.mjs'
 import { SessionDocument } from './types/SessionDocument.mjs'

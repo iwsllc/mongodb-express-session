@@ -1,6 +1,6 @@
-/* eslint-disable no-process-exit */
 import debugInit from 'debug'
 import { createServer } from 'http'
+
 import { app } from '../app.mjs'
 import { store } from '../store.mjs'
 

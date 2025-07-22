@@ -8,15 +8,21 @@ on:
 
 jobs:
   tests:
-    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x, 24.x]
     uses: iwsllc/workflows/.github/workflows/test.yaml@v2
     with:
-      node-version-file: '.nvmrc'
+      node-version: ${{ matrix.node-version }}
       install-command: npm ci -w package
       test-command: npm test -w package
   version:
     needs: tests
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    concurrency:
+      group: 'versioning-automation'
+      cancel-in-progress: false
     uses: iwsllc/workflows/.github/workflows/version.yaml@v2
     with:
       ref: main

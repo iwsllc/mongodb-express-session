@@ -3,7 +3,6 @@
   "version": "0.4.7",
   "description": "",
   "scripts": {
-    "prebuild": "tsc --build --clean && npm run prebuild -ws --if-present",
     "build": "tsc --build"
   },
   "author": "Nathan Bridgewater",
@@ -13,12 +12,6 @@
     "demo"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@stylistic/eslint-plugin": "^2.6.4",
-    "eslint": "^8.57.0",
-    "eslint-plugin-n": "^17.10.2",
-    "eslint-plugin-promise": "^7.1.0",
-    "globals": "^15.9.0",
-    "typescript-eslint": "^8.1.0"
+    "@iwsio/eslint-config": "^1.0.12"
   }
 }
