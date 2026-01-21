@@ -24,23 +24,20 @@
   "exports": {
     ".": "./dist/index.mjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/IWSLLC/mongodb-express-session.git"
-  },
+  "repository": "github:iwsllc/mongodb-express-session",
   "author": "Nathan Bridgewater",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/express-session": "^1.18.2",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.9",
     "express-session": "^1.18.2",
-    "mongodb": "^6.17.0",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "mongodb": "^7.0.0",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   },
   "peerDependencies": {
     "express-session": "^1",
-    "mongodb": "^6"
+    "mongodb": ">=6.0.0"
   }
 }
