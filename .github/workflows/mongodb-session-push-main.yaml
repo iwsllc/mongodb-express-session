@@ -6,13 +6,17 @@ on:
     paths:
       - 'package/**'
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   tests:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x, 24.x]
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v5
     with:
       node-version: ${{ matrix.node-version }}
       install-command: npm ci -w package
@@ -23,7 +27,7 @@ jobs:
     concurrency:
       group: 'versioning-automation'
       cancel-in-progress: false
-    uses: iwsllc/workflows/.github/workflows/version.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/version.yaml@v5
     with:
       ref: main
       node-version-file: '.nvmrc'
@@ -31,10 +35,11 @@ jobs:
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v5
     with:
       ref: main
       registry-url: https://registry.npmjs.org
+      skip-node-auth: true
       node-version-file: '.nvmrc'
       install-command: npm ci -w package
       build-command: npm run build -w package

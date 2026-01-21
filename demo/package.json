@@ -12,18 +12,18 @@
     "./dist"
   ],
   "dependencies": {
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "express-session": "^1.18.2",
-    "http-errors": "^2.0.0",
+    "http-errors": "^2.0.1",
     "morgan": "^1.10.1",
     "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@types/express-session": "^1.18.2",
-    "@types/node": "^24.1.0",
-    "debug": "^4.4.1",
-    "mongodb": "^6.17.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "@types/node": "^24.10.9",
+    "debug": "^4.4.3",
+    "mongodb": "^7.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   }
 }

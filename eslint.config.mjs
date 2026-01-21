@@ -1,11 +1,9 @@
+import { fileURLToPath } from 'node:url'
+
 import { configure } from '@iwsio/eslint-config'
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const monoRepoPackages = [
-	'@iwsio/mongodb-express-session'
-]
+const excludeWorkspacesFromNodeRules = ['demo'] // meant for browser only or not Node related.
 
-const monoRepoNodeProjects = [
-	'package'
-]
-
-export default configure({ monoRepoPackages, monoRepoNodeProjects })
+const configs = await configure({ autoFindMonorepoPackages: true, rootDir: __dirname, excludeWorkspacesFromNodeRules })
+export default configs
