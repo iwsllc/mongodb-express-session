@@ -27,11 +27,16 @@ jobs:
     concurrency:
       group: 'versioning-automation'
       cancel-in-progress: false
-    uses: iwsllc/workflows/.github/workflows/version.yaml@v5
+    uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@main
     with:
       ref: main
+      cache: npm
       node-version-file: '.nvmrc'
+      scope: '@iwsio'
       version-command: npm version patch -ws --include-workspace-root
+    secrets:
+      IWS_VERSION_BOT_PK: ${{ secrets.IWS_VERSION_BOT_PK}}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
